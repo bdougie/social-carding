@@ -1,9 +1,11 @@
-import Card from "../components/Card";
+import Hero from '../components/Hero';
+import SocialCards from '../components/SocialCards';
 
 export default function Home() {
   return (
     <div>
-      <Card/>
+      <Hero />
+      <SocialCards />
     </div>
-  )
+  );
 }
