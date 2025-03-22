@@ -198,7 +198,9 @@ function Card() {
                             <div className='flex justify-end mb-[15px] mt-[5px]'>
                                 {metaData.image ? (
                                     <div className="flex items-center uppercase text-white bg-gray-800 py-[5px] px-[8px] rounded-md transition duration-350 ease-in-out hover:bg-slate-600 hover:text-white">
-                                        <a href={`/api/download?url=${metaData.image.url}`}>Download</a>
+                                        <a href={`/download?url=${encodeURIComponent(metaData.image.url)}`} download target="_blank" rel="noopener noreferrer">
+                                            Download
+                                        </a>
                                         <FontAwesomeIcon icon={faDownload} className="ml-[8px] text-[14px]" />
                                     </div>
                                 ): (
