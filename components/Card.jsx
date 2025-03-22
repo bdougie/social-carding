@@ -36,6 +36,7 @@ function Card() {
 
     const urlRef = useRef("");
     const [metaData, setMetaData] = useState({});
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     
     const fetchMeta = async() => {
@@ -44,23 +45,35 @@ function Card() {
             return;
         }
         
+        // Reset states before fetching
         setLoading(true);
+        setError(null);
+        
         try {
             const response = await axios.get(`/api/fetchMeta/?url=${urlRef.current.value}`);
             console.log('API Response:', response);
             
-            // Ensure we have a valid response object before setting state
-            if (response && response.data && response.data.response) {
+            // Ensure we have a valid response object with needed data
+            if (response?.data && Object.keys(response.data).length > 0) {
                 setMetaData(response);
             } else {
-                console.error('Invalid response structure:', response);
+                // Handle empty or invalid response data
+                setError("No metadata found for this URL. Please check that the URL is correct and accessible.");
+                console.error('Invalid or empty data returned:', response);
             }
         } catch (err) {
+            // Handle fetch errors
+            setError(`Failed to fetch metadata: ${err.message || "Unknown error"}`);
             console.error('API Error:', err);
         } finally {
             setLoading(false);
         }
     }
+
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevent the default form submission
+        fetchMeta();
+    };
 
     useEffect(() => {
         initTheme();
@@ -105,9 +118,9 @@ function Card() {
 
     const hasValidResponse = () => {
         try {
-            return metaData?.data?.response && 
-                   typeof metaData.data.response === 'object' && 
-                   Object.keys(metaData.data.response).length > 0;
+            return metaData?.data && 
+                   typeof metaData.data === 'object' && 
+                   Object.keys(metaData.data).length > 0;
         } catch (error) {
             console.error('Error checking response validity:', error);
             return false;
@@ -147,12 +160,21 @@ function Card() {
                     initial={{opacity:0}}
                     animate={{opacity:1}}
                     className=' flex justify-center w-full mt-[30px] drop-shadow-sm px-1 '>
-                        
-                        <input ref={urlRef} type="text" placeholder='ex: https://facebook.com' className=' w-full bg-gray-200 border-[1px] h-[34px] mr-[10px]  outline-secondary px-2 rounded-md border-green-500 ' />
-                        <div className=' flex items-center cursor-pointer  uppercase bg-secondary px-2 rounded-md text-white transition duration-350 ease-in-out hover:bg-green-600 ' >
-                            <FontAwesomeIcon icon={faMagnifyingGlass} className=" mr-[5px]  font-normal text-[14px] " />
-                            <button  onClick={submitHandler} className="  "  >Preview</button>
-                        </div>
+                        <form onSubmit={handleSubmit} className="w-full flex">
+                            <input 
+                                ref={urlRef} 
+                                type="text" 
+                                placeholder='ex: https://facebook.com' 
+                                className='w-full bg-gray-200 border-[1px] h-[34px] mr-[10px] outline-secondary px-2 rounded-md border-green-500'
+                            />
+                            <button 
+                                type="submit"
+                                className='flex items-center cursor-pointer uppercase bg-secondary px-2 rounded-md text-white transition duration-350 ease-in-out hover:bg-green-600'
+                            >
+                                <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-[5px] font-normal text-[14px]" />
+                                <span>Preview</span>
+                            </button>
+                        </form>
                     </motion.div>
                 </div>
             </div>
@@ -163,49 +185,52 @@ function Card() {
                 </div>
             )}
 
-            {!loading && hasValidResponse() && (
+            {!loading && error && (
+                <div className="flex justify-center mt-[60px] text-center px-4">
+                    <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md max-w-[550px]">
+                        <h3 className="text-lg font-semibold mb-2">Error</h3>
+                        <p>{error}</p>
+                    </div>
+                </div>
+            )}
+
+            {!loading && !error && hasValidResponse() && (
                 <div>
                     <div className='flex justify-center mt-[45px] px-2'>
-                        <div className=' flex flex-col  max-w-[550px] mb-8 drop-shadow-sm bg-gray-100 border-[1px] dark:bg-gray-700 border-green-200 p-[10px] rounded-md  '>
-                            <div className=' flex justify-end mb-[15px] mt-[5px] '>
-                                { metaData.data.response.image ? (
-                                    <div className=" flex items-center uppercase text-white bg-gray-800 py-[5px] px-[8px] rounded-md transition duration-350 ease-in-out hover:bg-slate-600 hover:text-white  ">
-                                        <a  href={`/api/download?url=${metaData.data.response.image.url}`}>Download</a>
-                                        <FontAwesomeIcon icon={faDownload} className=" ml-[8px] text-[14px] " />
+                        <div className='flex flex-col max-w-[550px] mb-8 drop-shadow-sm bg-gray-100 border-[1px] dark:bg-gray-700 border-green-200 p-[10px] rounded-md'>
+                            <div className='flex justify-end mb-[15px] mt-[5px]'>
+                                {metaData.data.image ? (
+                                    <div className="flex items-center uppercase text-white bg-gray-800 py-[5px] px-[8px] rounded-md transition duration-350 ease-in-out hover:bg-slate-600 hover:text-white">
+                                        <a href={`/api/download?url=${metaData.data.image.url}`}>Download</a>
+                                        <FontAwesomeIcon icon={faDownload} className="ml-[8px] text-[14px]" />
                                     </div>
-                                ):
-        
-                               <div></div>
-                                }
+                                ): (
+                                    <div></div>
+                                )}
                             </div>
-                            <div className=' rounded-md overflow-hidden '>
-                                { metaData.data.response.image ? (
+                            <div className='rounded-md overflow-hidden'>
+                                {metaData.data.image ? (
                                     <div>
-                                        <img src={metaData.data.response.image.url} className=" w-full " alt="" />
+                                        <img src={metaData.data.image.url} className="w-full" alt="" />
                                     </div>
-                                ):
+                                ): (
                                     <img src="/missing-face.png" alt="Image missing" />
-                                    
-                                }
-                                
+                                )}
                             </div>
-                            <div className=' mt-[10px] '>
-                                <h1 className=' text-[20px] font-semibold text-gray-00 break-words dark:text-gray-400 mb-[10px] '>{metaData.data.response.title}</h1>
-                                
-                                <p className=' text-gray-500 text-[18px]   mb-[5px] break-words '>{metaData.data.response.description && metaData.data.response.description }</p>
-                                
-                                <div className=" flex items-center text-gray-600 dark:text-gray-400 ">
-                                    <FontAwesomeIcon icon={faEarthEurope} onClick={switchTheme} className=" text-[18px] mr-[5px] "/>
-                                    <h2 className='  text-[18px]  antialiased font-semibold ' >{metaData.data.response.site_name}</h2>
+                            <div className='mt-[10px]'>
+                                <h1 className='text-[20px] font-semibold text-gray-00 break-words dark:text-gray-400 mb-[10px]'>{metaData.data.title}</h1>
+                                <p className='text-gray-500 text-[18px] mb-[5px] break-words'>{metaData.data.description && metaData.data.description}</p>
+                                <div className="flex items-center text-gray-600 dark:text-gray-400">
+                                    <FontAwesomeIcon icon={faEarthEurope} onClick={switchTheme} className="text-[18px] mr-[5px]"/>
+                                    <h2 className='text-[18px] antialiased font-semibold'>{metaData.data.site_name}</h2>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </div>    
             )}
 
-            {!loading && !hasValidResponse() && urlRef.current.value && (
+            {!loading && !error && !hasValidResponse() && urlRef.current.value && (
                 <div className="flex justify-center mt-[60px] text-center px-4">
                     <div className="p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-md max-w-[550px]">
                         <h3 className="text-lg font-semibold mb-2">No data found</h3>
