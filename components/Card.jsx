@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon, faSun, faEarthEurope, faDownload, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { motion } from "framer-motion"
+import Image from 'next/image'  // Import Next.js Image component
 import Loader from "./Loader";
 import { fetchMetadata } from '../app/actions/metaActions';
 
@@ -209,11 +210,24 @@ function Card() {
                             </div>
                             <div className='rounded-md overflow-hidden'>
                                 {metaData.image ? (
-                                    <div>
-                                        <img src={metaData.image.url} className="w-full" alt="" />
+                                    <div className="relative w-full h-auto aspect-video">
+                                        <Image 
+                                            src={metaData.image.url} 
+                                            alt="Preview image"
+                                            fill
+                                            style={{ objectFit: 'contain' }}
+                                            unoptimized // Use this for external images
+                                        />
                                     </div>
                                 ): (
-                                    <img src="/missing-face.png" alt="Image missing" />
+                                    <div className="relative w-full h-auto aspect-video">
+                                        <Image 
+                                            src="/missing-face.png" 
+                                            alt="Image missing"
+                                            fill
+                                            style={{ objectFit: 'contain' }}
+                                        />
+                                    </div>
                                 )}
                             </div>
                             <div className='mt-[10px]'>
