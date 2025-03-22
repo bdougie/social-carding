@@ -1,3 +1,5 @@
+"use client"
+
 import axios from "axios";
 import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,23 +12,26 @@ function Card() {
     const [dark, setDark] = useState(false);
 
     const initTheme = () => {
-        if(localStorage.getItem("dark") == null ){
-            localStorage.setItem("dark", false);
+        // Check if user has previously set a preference
+        const storedTheme = localStorage.getItem("dark");
+        
+        if (storedTheme === null) {
+            // No stored preference, check system preference
+            const systemPrefersDark = window.matchMedia && 
+                window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            setDark(systemPrefersDark);
+            localStorage.setItem("dark", systemPrefersDark);
+        } else {
+            // Use stored preference
+            setDark(storedTheme === "true");
         }
-        if(localStorage.getItem("dark") == "true"){
-            setDark(true)
-        }  
     }
     
     const switchTheme = () => {
-        setDark(!dark)
-        if(localStorage.getItem("dark") == "false"){
-                localStorage.setItem("dark", true)
-            }
-        else{
-                localStorage.setItem("dark", false)
-        }
-        
+        const newDarkMode = !dark;
+        setDark(newDarkMode);
+        localStorage.setItem("dark", newDarkMode);
     }
 
     const urlRef = useRef("");
@@ -34,38 +39,84 @@ function Card() {
     const [loading, setLoading] = useState(false);
     
     const fetchMeta = async() => {
-        
+        if (!urlRef.current.value) {
+            console.error('URL is empty');
+            return;
+        }
         
         setLoading(true);
-        axios.get(`/api/fetchMeta/?url=${urlRef.current.value}`)
-        .then(res => {
-            setMetaData(res);
-            console.log(metaData)
+        try {
+            const response = await axios.get(`/api/fetchMeta/?url=${urlRef.current.value}`);
+            console.log('API Response:', response);
+            
+            // Ensure we have a valid response object before setting state
+            if (response && response.data && response.data.response) {
+                setMetaData(response);
+            } else {
+                console.error('Invalid response structure:', response);
+            }
+        } catch (err) {
+            console.error('API Error:', err);
+        } finally {
             setLoading(false);
-        })
-        .catch(err => {
-            setLoading(false);
-            console.error(err);
-        });
-
+        }
     }
-
-    
 
     useEffect(() => {
         initTheme();
+        
+        // Listen for changes in system color scheme preference
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e) => {
+            // Only apply if user hasn't explicitly set a preference
+            if (localStorage.getItem("dark") === null) {
+                setDark(e.matches);
+                localStorage.setItem("dark", e.matches);
+            }
+        };
+        
+        // Add event listener
+        if (mediaQuery.addEventListener) {
+            mediaQuery.addEventListener('change', handleChange);
+        } else {
+            // Fallback for older browsers
+            mediaQuery.addListener(handleChange);
+        }
+        
+        // Cleanup
+        return () => {
+            if (mediaQuery.removeEventListener) {
+                mediaQuery.removeEventListener('change', handleChange);
+            } else {
+                mediaQuery.removeListener(handleChange);
+            }
+        };
     }, []);
     
+    useEffect(() => {
+        if (metaData && metaData.data) {
+            console.log('Current metaData state:', metaData);
+        }
+    }, [metaData]);
+    
     const submitHandler = ()=> {
-
         fetchMeta();
-
     }
 
+    const hasValidResponse = () => {
+        try {
+            return metaData?.data?.response && 
+                   typeof metaData.data.response === 'object' && 
+                   Object.keys(metaData.data.response).length > 0;
+        } catch (error) {
+            console.error('Error checking response validity:', error);
+            return false;
+        }
+    };
 
   return (
-    <div className={` ${ dark ? " dark " : "" } `}>
-        <div className=' font-Inter dark:bg-gray-900 min-h-screen ' >
+    <div className={`w-full ${dark ? "dark" : ""}`}>
+        <div className='w-full font-Inter dark:bg-gray-900 min-h-screen'>
             <div className=' flex justify-end '>
                 <div className=' flex items-center relative justify-evenly mr-[20px] mt-[20px] mb-[10px]  h-[30px] w-[70px] rounded-2xl '>
                     <FontAwesomeIcon icon={faMoon} onClick={switchTheme} className={` text-[20px] p-[5px] hover:text-gray-600 transition cursor-pointer duration-450 ease-in-out ${ !dark ? " " : "bg-yellow-400" }   rounded-full  ` }/>
@@ -106,17 +157,15 @@ function Card() {
                 </div>
             </div>
 
-            {
-              loading &&
-                <div className=" flex justify-center mt-[60px] ">
+            {loading && (
+                <div className="flex justify-center mt-[60px]">
                     <Loader/>   
                 </div>
-            }
+            )}
 
-            {
-              !loading && metaData && metaData.data &&  Object.keys(metaData.data.response).length != 0 && (
-                  <div>
-                      <div className='  flex justify-center mt-[45px] px-2 ' >
+            {!loading && hasValidResponse() && (
+                <div>
+                    <div className='flex justify-center mt-[45px] px-2'>
                         <div className=' flex flex-col  max-w-[550px] mb-8 drop-shadow-sm bg-gray-100 border-[1px] dark:bg-gray-700 border-green-200 p-[10px] rounded-md  '>
                             <div className=' flex justify-end mb-[15px] mt-[5px] '>
                                 { metaData.data.response.image ? (
@@ -153,11 +202,17 @@ function Card() {
                             
                         </div>
                     </div>
-                  </div>    
-              )
-          }
+                </div>    
+            )}
 
-            
+            {!loading && !hasValidResponse() && urlRef.current.value && (
+                <div className="flex justify-center mt-[60px] text-center px-4">
+                    <div className="p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-md max-w-[550px]">
+                        <h3 className="text-lg font-semibold mb-2">No data found</h3>
+                        <p>We couldn't retrieve information from this URL. Please check the URL and try again.</p>
+                    </div>
+                </div>
+            )}
 
         </div>
     </div>
