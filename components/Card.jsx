@@ -1,11 +1,11 @@
 "use client"
 
-import axios from "axios";
 import { useEffect, useRef, useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon, faSun, faEarthEurope, faDownload, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { motion } from "framer-motion"
 import Loader from "./Loader";
+import { fetchMetadata } from '../app/actions/metaActions';
 
 function Card() {
 
@@ -35,7 +35,7 @@ function Card() {
     }
 
     const urlRef = useRef("");
-    const [metaData, setMetaData] = useState({});
+    const [metaData, setMetaData] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     
@@ -50,21 +50,18 @@ function Card() {
         setError(null);
         
         try {
-            const response = await axios.get(`/api/fetchMeta/?url=${urlRef.current.value}`);
-            console.log('API Response:', response);
+            const result = await fetchMetadata(urlRef.current.value);
             
-            // Ensure we have a valid response object with needed data
-            if (response?.data && Object.keys(response.data).length > 0) {
-                setMetaData(response);
+            if (result.error) {
+                setError(result.error);
+            } else if (result.data && Object.keys(result.data).length > 0) {
+                setMetaData(result.data);
             } else {
-                // Handle empty or invalid response data
                 setError("No metadata found for this URL. Please check that the URL is correct and accessible.");
-                console.error('Invalid or empty data returned:', response);
             }
         } catch (err) {
-            // Handle fetch errors
             setError(`Failed to fetch metadata: ${err.message || "Unknown error"}`);
-            console.error('API Error:', err);
+            console.error('Fetch Error:', err);
         } finally {
             setLoading(false);
         }
@@ -107,7 +104,7 @@ function Card() {
     }, []);
     
     useEffect(() => {
-        if (metaData && metaData.data) {
+        if (metaData) {
             console.log('Current metaData state:', metaData);
         }
     }, [metaData]);
@@ -118,9 +115,9 @@ function Card() {
 
     const hasValidResponse = () => {
         try {
-            return metaData?.data && 
-                   typeof metaData.data === 'object' && 
-                   Object.keys(metaData.data).length > 0;
+            return metaData && 
+                   typeof metaData === 'object' && 
+                   Object.keys(metaData).length > 0;
         } catch (error) {
             console.error('Error checking response validity:', error);
             return false;
@@ -199,9 +196,9 @@ function Card() {
                     <div className='flex justify-center mt-[45px] px-2'>
                         <div className='flex flex-col max-w-[550px] mb-8 drop-shadow-sm bg-gray-100 border-[1px] dark:bg-gray-700 border-green-200 p-[10px] rounded-md'>
                             <div className='flex justify-end mb-[15px] mt-[5px]'>
-                                {metaData.data.image ? (
+                                {metaData.image ? (
                                     <div className="flex items-center uppercase text-white bg-gray-800 py-[5px] px-[8px] rounded-md transition duration-350 ease-in-out hover:bg-slate-600 hover:text-white">
-                                        <a href={`/api/download?url=${metaData.data.image.url}`}>Download</a>
+                                        <a href={`/api/download?url=${metaData.image.url}`}>Download</a>
                                         <FontAwesomeIcon icon={faDownload} className="ml-[8px] text-[14px]" />
                                     </div>
                                 ): (
@@ -209,20 +206,20 @@ function Card() {
                                 )}
                             </div>
                             <div className='rounded-md overflow-hidden'>
-                                {metaData.data.image ? (
+                                {metaData.image ? (
                                     <div>
-                                        <img src={metaData.data.image.url} className="w-full" alt="" />
+                                        <img src={metaData.image.url} className="w-full" alt="" />
                                     </div>
                                 ): (
                                     <img src="/missing-face.png" alt="Image missing" />
                                 )}
                             </div>
                             <div className='mt-[10px]'>
-                                <h1 className='text-[20px] font-semibold text-gray-00 break-words dark:text-gray-400 mb-[10px]'>{metaData.data.title}</h1>
-                                <p className='text-gray-500 text-[18px] mb-[5px] break-words'>{metaData.data.description && metaData.data.description}</p>
+                                <h1 className='text-[20px] font-semibold text-gray-00 break-words dark:text-gray-400 mb-[10px]'>{metaData.title}</h1>
+                                <p className='text-gray-500 text-[18px] mb-[5px] break-words'>{metaData.description && metaData.description}</p>
                                 <div className="flex items-center text-gray-600 dark:text-gray-400">
                                     <FontAwesomeIcon icon={faEarthEurope} onClick={switchTheme} className="text-[18px] mr-[5px]"/>
-                                    <h2 className='text-[18px] antialiased font-semibold'>{metaData.data.site_name}</h2>
+                                    <h2 className='text-[18px] antialiased font-semibold'>{metaData.site_name}</h2>
                                 </div>
                             </div>
                         </div>
