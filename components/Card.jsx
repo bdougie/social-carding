@@ -247,7 +247,7 @@ function Card() {
                 <div className="flex justify-center mt-[60px] text-center px-4">
                     <div className="p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-md max-w-[550px]">
                         <h3 className="text-lg font-semibold mb-2">No data found</h3>
-                        <p>We couldn't retrieve information from this URL. Please check the URL and try again.</p>
+                        <p>We couldn&apos;t retrieve information from this URL. Please check the URL and try again.</p>
                     </div>
                 </div>
             )}
