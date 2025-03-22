@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Social Carding
+
+This is a [Next.js 15](https://nextjs.org/) project that uses modern features like the App Router and Server Actions.
+
+## Project Structure
+
+The project follows the Next.js 15 App Router structure:
 
 ## Getting Started
 
