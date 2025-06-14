@@ -1,26 +1,15 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { 
-  faMoon, 
-  faSun, 
-  faDownload, 
-  faMagnifyingGlass,
-  faEdit,
-  faCopy,
-  faEye,
-  faRobot,
-  faImage,
-  faCode,
-  faBullseye
-} from '@fortawesome/free-solid-svg-icons'
 import { motion } from "framer-motion"
+import Navigation from './Navigation'
 import EditPanel from './EditPanel'
 import PreviewPanel from './PreviewPanel'
 import CodePanel from './CodePanel'
 import AIScorePanel from './AIScorePanel'
+import { Button } from './ui/button'
 import { fetchMetadata } from '../app/actions/metaActions'
+import { Search, Edit, Eye, Code, Bot } from 'lucide-react'
 
 function SocialCardEditor() {
   const [dark, setDark] = useState(false)
@@ -217,42 +206,20 @@ function SocialCardEditor() {
   }, [])
 
   const tabs = [
-    { id: 'edit', label: 'Edit', icon: faEdit },
-    { id: 'preview', label: 'Preview', icon: faEye },
-    { id: 'code', label: 'Copy', icon: faCode },
-    { id: 'ai-score', label: 'AI Score', icon: faRobot }
+    { id: 'edit', label: 'Edit', icon: Edit },
+    { id: 'preview', label: 'Preview', icon: Eye },
+    { id: 'code', label: 'Copy', icon: Code },
+    { id: 'ai-score', label: 'AI Score', icon: Bot }
   ]
 
   return (
     <div className={`w-full min-h-screen ${dark ? "dark" : ""}`}>
       <div className='w-full font-Inter dark:bg-gray-900 min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700'>
-        {/* Header */}
-        <div className='flex justify-between items-center p-6'>
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mr-3">
-              <FontAwesomeIcon icon={faBullseye} className="text-purple-600 text-xl" />
-            </div>
-            <h1 className="text-white text-2xl font-bold">SocialCarding</h1>
-          </div>
-          
-          <div className='flex items-center space-x-4'>
-            <div className='flex items-center bg-white/10 backdrop-blur-sm rounded-full p-1'>
-              <FontAwesomeIcon 
-                icon={faMoon} 
-                onClick={switchTheme} 
-                className={`text-lg p-2 hover:text-gray-300 transition cursor-pointer duration-300 ${!dark ? "" : "bg-yellow-400 text-gray-900"} rounded-full`}
-              />
-              <FontAwesomeIcon 
-                icon={faSun} 
-                onClick={switchTheme} 
-                className={`text-lg p-2 hover:text-gray-300 cursor-pointer transition duration-300 ${dark ? "" : "bg-yellow-400 text-gray-900"} rounded-full`}
-              />
-            </div>
-          </div>
-        </div>
+        {/* Navigation */}
+        <Navigation dark={dark} switchTheme={switchTheme} />
 
         {/* Main Content */}
-        <div className='flex justify-center px-6'>
+        <div className='flex justify-center px-6 pt-12'>
           <div className='w-full max-w-7xl'>
             {/* Hero Section */}
             <div className='text-center mb-12'>
@@ -299,20 +266,21 @@ function SocialCardEditor() {
                     placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
                     className='flex-1 bg-white/90 backdrop-blur-sm border-0 h-14 px-6 outline-none rounded-xl text-gray-800 placeholder-gray-500 text-lg shadow-lg'
                   />
-                  <button 
+                  <Button 
                     type="submit"
                     disabled={loading}
-                    className='flex items-center justify-center bg-white text-purple-600 px-8 rounded-xl font-semibold transition duration-300 hover:bg-gray-100 disabled:opacity-50 shadow-lg min-w-[140px]'
+                    size="lg"
+                    className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14'
                   >
                     {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                     ) : (
                       <>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2" />
+                        <Search className="mr-2 h-4 w-4" />
                         Analyze
                       </>
                     )}
-                  </button>
+                  </Button>
                 </form>
               </div>
             </motion.div>
@@ -338,29 +306,32 @@ function SocialCardEditor() {
                 {/* Tab Navigation */}
                 <div className="border-b border-gray-200">
                   <nav className="flex">
-                    {tabs.map((tab) => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center px-6 py-4 text-sm font-medium transition-colors duration-200 ${
-                          activeTab === tab.id
-                            ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
-                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        <FontAwesomeIcon icon={tab.icon} className="mr-2" />
-                        {tab.label}
-                        {tab.id === 'ai-score' && aiScore && (
-                          <span className={`ml-2 px-2 py-1 rounded-full text-xs font-bold ${
-                            aiScore.score >= 80 ? 'bg-green-100 text-green-800' :
-                            aiScore.score >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
-                            {aiScore.score}
-                          </span>
-                        )}
-                      </button>
-                    ))}
+                    {tabs.map((tab) => {
+                      const IconComponent = tab.icon
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`flex items-center px-6 py-4 text-sm font-medium transition-colors duration-200 ${
+                            activeTab === tab.id
+                              ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
+                              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          <IconComponent className="mr-2 h-4 w-4" />
+                          {tab.label}
+                          {tab.id === 'ai-score' && aiScore && (
+                            <span className={`ml-2 px-2 py-1 rounded-full text-xs font-bold ${
+                              aiScore.score >= 80 ? 'bg-green-100 text-green-800' :
+                              aiScore.score >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-red-100 text-red-800'
+                            }`}>
+                              {aiScore.score}
+                            </span>
+                          )}
+                        </button>
+                      )
+                    })}
                   </nav>
                 </div>
 
