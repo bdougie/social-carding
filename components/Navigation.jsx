@@ -15,12 +15,21 @@ import {
 import { cn } from "../lib/utils"
 
 const Navigation = ({ dark, switchTheme }) => {
+  const handleHomeClick = () => {
+    window.location.href = '/'
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
         {/* Brand */}
         <div className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight text-foreground">SocialCarding</span>
+          <button 
+            onClick={handleHomeClick}
+            className="text-xl font-bold tracking-tight text-foreground hover:text-primary transition-colors cursor-pointer"
+          >
+            SocialCarding
+          </button>
         </div>
 
         {/* Right side actions */}
