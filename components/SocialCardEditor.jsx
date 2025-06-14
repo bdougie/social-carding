@@ -8,8 +8,8 @@ import PreviewPanel from './PreviewPanel'
 import CodePanel from './CodePanel'
 import AIScorePanel from './AIScorePanel'
 import { Button } from './ui/button'
-import { fetchMetadata } from '../app/actions/metaActions'
-import { Search, Edit, Eye, Code, Bot, Sparkles } from 'lucide-react'
+import { fetchMetadata, validateUrl } from '../app/actions/metaActions'
+import { Search, Edit, Eye, Code, Bot, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
 
 function SocialCardEditor() {
   const [dark, setDark] = useState(false)
@@ -25,6 +25,7 @@ function SocialCardEditor() {
   const [loading, setLoading] = useState(false)
   const [aiScore, setAiScore] = useState(null)
   const [inputUrl, setInputUrl] = useState('')
+  const [debugInfo, setDebugInfo] = useState(null)
 
   const initTheme = () => {
     if (typeof window !== 'undefined') {
@@ -72,18 +73,45 @@ function SocialCardEditor() {
   }
 
   const fetchMeta = async() => {
-    if (!inputUrl.trim()) {
-      setError('Please enter a URL')
-      return
+    console.log('🚀 Starting URL submission process');
+    
+    // Client-side validation first
+    const validation = validateUrl(inputUrl);
+    if (!validation.valid) {
+      setError(validation.error);
+      console.error('❌ Client-side validation failed:', validation.error);
+      return;
     }
     
     setLoading(true)
     setError(null)
+    setDebugInfo({
+      timestamp: new Date().toISOString(),
+      originalUrl: inputUrl,
+      userAgent: navigator.userAgent,
+      browserInfo: {
+        language: navigator.language,
+        platform: navigator.platform,
+        cookieEnabled: navigator.cookieEnabled,
+        onLine: navigator.onLine
+      }
+    })
+    
+    console.log('🔍 Debug Info:', {
+      timestamp: new Date().toISOString(),
+      originalUrl: inputUrl,
+      userAgent: navigator.userAgent,
+      networkStatus: navigator.onLine ? 'Online' : 'Offline'
+    });
     
     try {
+      console.log('📡 Calling fetchMetadata server action...');
       const result = await fetchMetadata(inputUrl.trim())
       
+      console.log('📊 Server response:', result);
+      
       if (result.error) {
+        console.error('❌ Server returned error:', result.error);
         setError(result.error)
         setMetaData(null)
         setCustomData({
@@ -93,6 +121,7 @@ function SocialCardEditor() {
           url: inputUrl.trim()
         })
       } else if (result.data) {
+        console.log('✅ Metadata received successfully');
         setMetaData(result.data)
         setCustomData({
           title: result.data.title || '',
@@ -104,8 +133,13 @@ function SocialCardEditor() {
         setError(null)
       }
     } catch (err) {
-      setError(`Failed to fetch metadata: ${err.message || "Unknown error"}`)
-      console.error('Fetch Error:', err)
+      console.error('💥 Client-side error:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack
+      });
+      
+      setError(`Client error: ${err.message || "Unknown error"}. Please check the browser console for more details.`)
     } finally {
       setLoading(false)
     }
@@ -325,15 +359,63 @@ function SocialCardEditor() {
                       )}
                     </Button>
                   </form>
+                  
+                  {/* Network Status Indicator */}
+                  <div className="flex items-center justify-center mt-4 space-x-4 text-sm text-muted-foreground">
+                    <div className="flex items-center space-x-2">
+                      {navigator.onLine ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 text-success" />
+                          <span>Online</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle className="h-4 w-4 text-destructive" />
+                          <span>Offline</span>
+                        </>
+                      )}
+                    </div>
+                    {debugInfo && (
+                      <div className="text-xs">
+                        Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
 
-              {/* Error Display */}
+              {/* Error Display with Enhanced Information */}
               {error && (
                 <div className="flex justify-center mb-8">
                   <div className="bg-destructive/10 backdrop-blur-sm border border-destructive/20 text-destructive rounded-xl p-6 max-w-2xl w-full">
-                    <h3 className="text-lg font-semibold mb-2">Error</h3>
-                    <p>{error}</p>
+                    <div className="flex items-start space-x-3">
+                      <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold mb-2">Unable to Fetch URL</h3>
+                        <p className="mb-4">{error}</p>
+                        
+                        {/* Troubleshooting Tips */}
+                        <div className="bg-destructive/5 rounded-lg p-4 mt-4">
+                          <h4 className="font-semibold mb-2">Troubleshooting Tips:</h4>
+                          <ul className="text-sm space-y-1 list-disc list-inside">
+                            <li>Verify the URL is correct and accessible in your browser</li>
+                            <li>Check if the website is currently online</li>
+                            <li>Some websites block automated requests</li>
+                            <li>Try using the full URL with https://</li>
+                            <li>Check your internet connection</li>
+                          </ul>
+                        </div>
+                        
+                        {debugInfo && (
+                          <details className="mt-4">
+                            <summary className="cursor-pointer text-sm font-medium">Debug Information</summary>
+                            <pre className="text-xs mt-2 p-2 bg-destructive/5 rounded overflow-x-auto">
+                              {JSON.stringify(debugInfo, null, 2)}
+                            </pre>
+                          </details>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
