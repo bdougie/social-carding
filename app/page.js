@@ -1,9 +1,9 @@
-import Card from '../components/Card';
+import SocialCardEditor from '../components/SocialCardEditor';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <Card />
+    <main className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700">
+      <SocialCardEditor />
     </main>
   );
 }

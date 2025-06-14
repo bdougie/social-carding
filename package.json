@@ -1,5 +1,5 @@
 {
-  "name": "brian",
+  "name": "socialcarding-platform",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,11 @@
     "next": "^15.0.0",
     "open-graph": "^0.2.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-image-crop": "^11.0.5",
+    "html2canvas": "^1.4.1",
+    "prismjs": "^1.29.0",
+    "react-syntax-highlighter": "^15.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
