@@ -77,14 +77,6 @@ const Navigation = ({ dark, switchTheme }) => {
                 About
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                className={cn(navigationMenuTriggerStyle(), "text-foreground")}
-                href="#"
-              >
-                Blog
-              </NavigationMenuLink>
-            </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
 
