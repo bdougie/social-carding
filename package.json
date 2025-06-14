@@ -11,16 +11,12 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "axios": "^1.6.7",
     "framer-motion": "^11.0.8",
     "next": "^15.0.0",
-    "open-graph": "^0.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-image-crop": "^11.0.5",
-    "html2canvas": "^1.4.1",
-    "prismjs": "^1.29.0",
-    "react-syntax-highlighter": "^15.5.0"
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",

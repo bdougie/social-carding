@@ -35,31 +35,35 @@ function SocialCardEditor() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [aiScore, setAiScore] = useState(null)
-  const urlRef = useRef("")
+  const [inputUrl, setInputUrl] = useState('')
 
   const initTheme = () => {
-    const storedTheme = localStorage.getItem("dark")
-    
-    if (storedTheme === null) {
-      const systemPrefersDark = window.matchMedia && 
-        window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (typeof window !== 'undefined') {
+      const storedTheme = localStorage.getItem("dark")
       
-      setDark(systemPrefersDark)
-      localStorage.setItem("dark", systemPrefersDark)
-    } else {
-      setDark(storedTheme === "true")
+      if (storedTheme === null) {
+        const systemPrefersDark = window.matchMedia && 
+          window.matchMedia('(prefers-color-scheme: dark)').matches
+        
+        setDark(systemPrefersDark)
+        localStorage.setItem("dark", systemPrefersDark)
+      } else {
+        setDark(storedTheme === "true")
+      }
     }
   }
   
   const switchTheme = () => {
     const newDarkMode = !dark
     setDark(newDarkMode)
-    localStorage.setItem("dark", newDarkMode)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("dark", newDarkMode)
+    }
   }
 
   const fetchMeta = async() => {
-    if (!urlRef.current.value) {
-      console.error('URL is empty')
+    if (!inputUrl.trim()) {
+      setError('Please enter a URL')
       return
     }
     
@@ -67,21 +71,27 @@ function SocialCardEditor() {
     setError(null)
     
     try {
-      const result = await fetchMetadata(urlRef.current.value)
+      const result = await fetchMetadata(inputUrl.trim())
       
       if (result.error) {
         setError(result.error)
-      } else if (result.data && Object.keys(result.data).length > 0) {
+        setMetaData(null)
+        setCustomData({
+          title: '',
+          description: '',
+          image: null,
+          url: inputUrl.trim()
+        })
+      } else if (result.data) {
         setMetaData(result.data)
         setCustomData({
           title: result.data.title || '',
           description: result.data.description || '',
           image: result.data.image?.url || null,
-          url: urlRef.current.value
+          url: result.data.url || inputUrl.trim()
         })
         calculateAIScore(result.data)
-      } else {
-        setError("No metadata found for this URL. Please check that the URL is correct and accessible.")
+        setError(null)
       }
     } catch (err) {
       setError(`Failed to fetch metadata: ${err.message || "Unknown error"}`)
@@ -181,25 +191,27 @@ function SocialCardEditor() {
   useEffect(() => {
     initTheme()
     
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const handleChange = (e) => {
-      if (localStorage.getItem("dark") === null) {
-        setDark(e.matches)
-        localStorage.setItem("dark", e.matches)
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      const handleChange = (e) => {
+        if (localStorage.getItem("dark") === null) {
+          setDark(e.matches)
+          localStorage.setItem("dark", e.matches)
+        }
       }
-    }
-    
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange)
-    } else {
-      mediaQuery.addListener(handleChange)
-    }
-    
-    return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', handleChange)
+      
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', handleChange)
       } else {
-        mediaQuery.removeListener(handleChange)
+        mediaQuery.addListener(handleChange)
+      }
+      
+      return () => {
+        if (mediaQuery.removeEventListener) {
+          mediaQuery.removeEventListener('change', handleChange)
+        } else {
+          mediaQuery.removeListener(handleChange)
+        }
       }
     }
   }, [])
@@ -281,9 +293,10 @@ function SocialCardEditor() {
               <div className='w-full max-w-2xl'>
                 <form onSubmit={handleSubmit} className="flex gap-4">
                   <input 
-                    ref={urlRef} 
                     type="text" 
-                    placeholder='Enter your URL (e.g., https://example.com)' 
+                    value={inputUrl}
+                    onChange={(e) => setInputUrl(e.target.value)}
+                    placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
                     className='flex-1 bg-white/90 backdrop-blur-sm border-0 h-14 px-6 outline-none rounded-xl text-gray-800 placeholder-gray-500 text-lg shadow-lg'
                   />
                   <button 
@@ -315,7 +328,7 @@ function SocialCardEditor() {
             )}
 
             {/* Main Interface */}
-            {(metaData || customData.title) && !loading && (
+            {(metaData || customData.title || error) && !loading && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
