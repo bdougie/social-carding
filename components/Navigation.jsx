@@ -23,14 +23,14 @@ const Navigation = ({ dark, switchTheme }) => {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <Target className="h-4 w-4 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold tracking-tight">SocialCarding</span>
+          <span className="text-xl font-bold tracking-tight text-foreground">SocialCarding</span>
         </div>
 
         {/* Navigation Menu */}
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger>Features</NavigationMenuTrigger>
+              <NavigationMenuTrigger className="text-foreground">Features</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                   <li className="row-span-3">
@@ -39,8 +39,8 @@ const Navigation = ({ dark, switchTheme }) => {
                         className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                         href="/"
                       >
-                        <Target className="h-6 w-6" />
-                        <div className="mb-2 mt-4 text-lg font-medium">
+                        <Target className="h-6 w-6 text-primary" />
+                        <div className="mb-2 mt-4 text-lg font-medium text-foreground">
                           SocialCarding
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
@@ -63,7 +63,7 @@ const Navigation = ({ dark, switchTheme }) => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cn(navigationMenuTriggerStyle(), "text-foreground")}
                 href="#"
               >
                 Pricing
@@ -71,7 +71,7 @@ const Navigation = ({ dark, switchTheme }) => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cn(navigationMenuTriggerStyle(), "text-foreground")}
                 href="#"
               >
                 About
@@ -79,7 +79,7 @@ const Navigation = ({ dark, switchTheme }) => {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink
-                className={navigationMenuTriggerStyle()}
+                className={cn(navigationMenuTriggerStyle(), "text-foreground")}
                 href="#"
               >
                 Blog
@@ -95,7 +95,7 @@ const Navigation = ({ dark, switchTheme }) => {
             variant="ghost"
             size="icon"
             onClick={switchTheme}
-            className="h-9 w-9"
+            className="h-9 w-9 text-foreground hover:bg-accent hover:text-accent-foreground"
             aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
           >
             {dark ? (
@@ -107,7 +107,7 @@ const Navigation = ({ dark, switchTheme }) => {
 
           {/* CTA Buttons */}
           <div className="hidden sm:flex items-center space-x-2">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="text-foreground">
               Sign In
             </Button>
             <Button size="sm">
@@ -119,7 +119,7 @@ const Navigation = ({ dark, switchTheme }) => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden h-9 w-9"
+            className="md:hidden h-9 w-9 text-foreground hover:bg-accent hover:text-accent-foreground"
             aria-label="Open menu"
           >
             <svg
@@ -154,7 +154,7 @@ const ListItem = React.forwardRef(({ className, title, children, ...props }, ref
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className="text-sm font-medium leading-none text-foreground">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>

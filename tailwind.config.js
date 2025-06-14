@@ -50,6 +50,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom color extensions
+        'hero-bg': 'hsl(var(--hero-bg))',
+        'hero-text': 'hsl(var(--hero-text))',
+        'hero-accent': 'hsl(var(--hero-accent))',
+        'surface': 'hsl(var(--surface))',
+        'surface-secondary': 'hsl(var(--surface-secondary))',
+        'text-primary-custom': 'hsl(var(--text-primary))',
+        'text-secondary-custom': 'hsl(var(--text-secondary))',
+        'success': 'hsl(var(--success))',
+        'warning': 'hsl(var(--warning))',
+        'info': 'hsl(var(--info))',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -77,13 +88,29 @@ module.exports = {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center"
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center"
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
+        "gradient-x": "gradient-x 15s ease infinite",
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-light': 'linear-gradient(135deg, hsl(220 14% 96%) 0%, hsl(210 40% 98%) 100%)',
+        'hero-dark': 'linear-gradient(135deg, hsl(222.2 84% 4.9%) 0%, hsl(217.2 32.6% 17.5%) 100%)',
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

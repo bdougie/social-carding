@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { Copy, Check } from 'lucide-react'
+import { Button } from './ui/button'
 
 function CodePanel({ data }) {
   const [copiedSection, setCopiedSection] = useState(null)
@@ -88,34 +88,42 @@ ${generateSchemaMarkup()}`
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Copy Meta Tags</h2>
-        <p className="text-gray-600">Copy the HTML meta tags and paste them into your website's &lt;head&gt; section.</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Copy Meta Tags</h2>
+        <p className="text-muted-foreground">Copy the HTML meta tags and paste them into your website's &lt;head&gt; section.</p>
       </div>
 
       <div className="space-y-6">
         {sections.map((section) => (
-          <div key={section.id} className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+          <div key={section.id} className="border border-border rounded-lg overflow-hidden bg-card">
+            <div className="bg-muted/50 px-6 py-4 border-b border-border">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{section.title}</h3>
-                  <p className="text-sm text-gray-600">{section.description}</p>
+                  <h3 className="text-lg font-semibold text-foreground">{section.title}</h3>
+                  <p className="text-sm text-muted-foreground">{section.description}</p>
                 </div>
-                <button
+                <Button
                   onClick={() => copyToClipboard(section.code, section.id)}
-                  className="flex items-center space-x-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                  variant="default"
+                  size="sm"
+                  className="flex items-center space-x-2"
                 >
-                  <FontAwesomeIcon 
-                    icon={copiedSection === section.id ? faCheck : faCopy} 
-                    className={copiedSection === section.id ? 'text-green-300' : ''} 
-                  />
-                  <span>{copiedSection === section.id ? 'Copied!' : 'Copy'}</span>
-                </button>
+                  {copiedSection === section.id ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      <span>Copy</span>
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
             
             <div className="p-6">
-              <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+              <pre className="bg-background border border-border text-foreground p-4 rounded-lg overflow-x-auto text-sm">
                 <code>{section.code}</code>
               </pre>
             </div>
@@ -124,9 +132,9 @@ ${generateSchemaMarkup()}`
       </div>
 
       {/* Implementation Guide */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-blue-800 mb-3">Implementation Guide</h3>
-        <div className="space-y-3 text-sm text-blue-700">
+      <div className="bg-info/10 border border-info/20 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-info mb-3">Implementation Guide</h3>
+        <div className="space-y-3 text-sm text-info/90">
           <div>
             <strong>1. Copy the meta tags</strong> - Use the "Complete Meta Tags" section for all platforms
           </div>
@@ -143,44 +151,44 @@ ${generateSchemaMarkup()}`
       </div>
 
       {/* Testing Tools */}
-      <div className="bg-gray-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Testing Tools</h3>
+      <div className="bg-muted/50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Testing Tools</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a
             href="https://developers.facebook.com/tools/debug/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+            className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors"
           >
-            <h4 className="font-semibold text-gray-800">Facebook Debugger</h4>
-            <p className="text-sm text-gray-600">Test Open Graph tags</p>
+            <h4 className="font-semibold text-foreground">Facebook Debugger</h4>
+            <p className="text-sm text-muted-foreground">Test Open Graph tags</p>
           </a>
           <a
             href="https://cards-dev.twitter.com/validator"
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+            className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors"
           >
-            <h4 className="font-semibold text-gray-800">Twitter Card Validator</h4>
-            <p className="text-sm text-gray-600">Test Twitter cards</p>
+            <h4 className="font-semibold text-foreground">Twitter Card Validator</h4>
+            <p className="text-sm text-muted-foreground">Test Twitter cards</p>
           </a>
           <a
             href="https://www.linkedin.com/post-inspector/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+            className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors"
           >
-            <h4 className="font-semibold text-gray-800">LinkedIn Inspector</h4>
-            <p className="text-sm text-gray-600">Test LinkedIn previews</p>
+            <h4 className="font-semibold text-foreground">LinkedIn Inspector</h4>
+            <p className="text-sm text-muted-foreground">Test LinkedIn previews</p>
           </a>
           <a
             href="https://search.google.com/test/rich-results"
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+            className="block p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-colors"
           >
-            <h4 className="font-semibold text-gray-800">Google Rich Results</h4>
-            <p className="text-sm text-gray-600">Test structured data</p>
+            <h4 className="font-semibold text-foreground">Google Rich Results</h4>
+            <p className="text-sm text-muted-foreground">Test structured data</p>
           </a>
         </div>
       </div>

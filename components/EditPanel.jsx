@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useRef } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faImage, faUpload, faCrop } from '@fortawesome/free-solid-svg-icons'
+import { Upload, Image as ImageIcon } from 'lucide-react'
+import { Button } from './ui/button'
 import Image from 'next/image'
 
 function EditPanel({ metaData, customData, updateCustomData }) {
@@ -24,15 +24,15 @@ function EditPanel({ metaData, customData, updateCustomData }) {
 
   const getCharacterCount = (text, max) => {
     const count = text?.length || 0
-    const color = count > max ? 'text-red-500' : count > max * 0.9 ? 'text-yellow-500' : 'text-green-500'
+    const color = count > max ? 'text-destructive' : count > max * 0.9 ? 'text-warning' : 'text-success'
     return { count, color }
   }
 
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Customize Your Social Card</h2>
-        <p className="text-gray-600">Modify the title, description, and image to optimize visibility and engagement.</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">Customize Your Social Card</h2>
+        <p className="text-muted-foreground">Modify the title, description, and image to optimize visibility and engagement.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -40,7 +40,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
         <div className="space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-foreground mb-2">
               Title
             </label>
             <div className="relative">
@@ -48,7 +48,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                 value={customData.title}
                 onChange={(e) => updateCustomData('title', e.target.value)}
                 placeholder="Enter a compelling title..."
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                className="w-full p-4 border border-border bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent resize-none placeholder-muted-foreground"
                 rows="2"
               />
               <div className="absolute bottom-2 right-2 text-xs">
@@ -57,14 +57,14 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                 </span>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Recommended: 30-60 characters for optimal engagement
             </p>
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-foreground mb-2">
               Description
             </label>
             <div className="relative">
@@ -72,7 +72,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                 value={customData.description}
                 onChange={(e) => updateCustomData('description', e.target.value)}
                 placeholder="Write a compelling description..."
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                className="w-full p-4 border border-border bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent resize-none placeholder-muted-foreground"
                 rows="4"
               />
               <div className="absolute bottom-2 right-2 text-xs">
@@ -81,14 +81,14 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                 </span>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Recommended: 120-160 characters for best results
             </p>
           </div>
 
           {/* URL */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-foreground mb-2">
               URL
             </label>
             <input
@@ -96,7 +96,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
               value={customData.url}
               onChange={(e) => updateCustomData('url', e.target.value)}
               placeholder="https://example.com"
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full p-4 border border-border bg-background text-foreground rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent placeholder-muted-foreground"
             />
           </div>
         </div>
@@ -104,12 +104,12 @@ function EditPanel({ metaData, customData, updateCustomData }) {
         {/* Right Column - Image */}
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-foreground mb-2">
               Image
             </label>
             
             {/* Image Preview */}
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+            <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary/50 transition-colors bg-surface/50">
               {(customData.image || imagePreview) ? (
                 <div className="space-y-4">
                   <div className="relative w-full h-48 rounded-lg overflow-hidden">
@@ -121,26 +121,28 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                       unoptimized
                     />
                   </div>
-                  <button
+                  <Button
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                    variant="outline"
+                    className="inline-flex items-center"
                   >
-                    <FontAwesomeIcon icon={faUpload} className="mr-2" />
+                    <Upload className="mr-2 h-4 w-4" />
                     Change Image
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <FontAwesomeIcon icon={faImage} className="text-4xl text-gray-400" />
+                  <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground" />
                   <div>
-                    <p className="text-gray-600 mb-2">Upload an image for your social card</p>
-                    <button
+                    <p className="text-muted-foreground mb-2">Upload an image for your social card</p>
+                    <Button
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                      variant="outline"
+                      className="inline-flex items-center"
                     >
-                      <FontAwesomeIcon icon={faUpload} className="mr-2" />
+                      <Upload className="mr-2 h-4 w-4" />
                       Upload Image
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}
@@ -154,15 +156,15 @@ function EditPanel({ metaData, customData, updateCustomData }) {
               className="hidden"
             />
 
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-muted-foreground mt-2">
               Recommended: 1200x630px for optimal display across all platforms
             </p>
           </div>
 
           {/* Platform Dimensions Guide */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-semibold text-gray-700 mb-3">Platform Recommendations</h4>
-            <div className="space-y-2 text-sm text-gray-600">
+          <div className="bg-muted/50 rounded-lg p-4">
+            <h4 className="font-semibold text-foreground mb-3">Platform Recommendations</h4>
+            <div className="space-y-2 text-sm text-muted-foreground">
               <div className="flex justify-between">
                 <span>Facebook/LinkedIn:</span>
                 <span>1200x630px</span>

@@ -9,7 +9,7 @@ import CodePanel from './CodePanel'
 import AIScorePanel from './AIScorePanel'
 import { Button } from './ui/button'
 import { fetchMetadata } from '../app/actions/metaActions'
-import { Search, Edit, Eye, Code, Bot } from 'lucide-react'
+import { Search, Edit, Eye, Code, Bot, Sparkles } from 'lucide-react'
 
 function SocialCardEditor() {
   const [dark, setDark] = useState(false)
@@ -36,8 +36,21 @@ function SocialCardEditor() {
         
         setDark(systemPrefersDark)
         localStorage.setItem("dark", systemPrefersDark)
+        
+        // Apply theme to document
+        if (systemPrefersDark) {
+          document.documentElement.classList.add('dark')
+        }
       } else {
-        setDark(storedTheme === "true")
+        const isDark = storedTheme === "true"
+        setDark(isDark)
+        
+        // Apply theme to document
+        if (isDark) {
+          document.documentElement.classList.add('dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+        }
       }
     }
   }
@@ -45,8 +58,16 @@ function SocialCardEditor() {
   const switchTheme = () => {
     const newDarkMode = !dark
     setDark(newDarkMode)
+    
     if (typeof window !== 'undefined') {
       localStorage.setItem("dark", newDarkMode)
+      
+      // Apply theme to document
+      if (newDarkMode) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
   }
 
@@ -186,6 +207,13 @@ function SocialCardEditor() {
         if (localStorage.getItem("dark") === null) {
           setDark(e.matches)
           localStorage.setItem("dark", e.matches)
+          
+          // Apply theme to document
+          if (e.matches) {
+            document.documentElement.classList.add('dark')
+          } else {
+            document.documentElement.classList.remove('dark')
+          }
         }
       }
       
@@ -213,159 +241,175 @@ function SocialCardEditor() {
   ]
 
   return (
-    <div className={`w-full min-h-screen ${dark ? "dark" : ""}`}>
-      <div className='w-full font-Inter dark:bg-gray-900 min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700'>
+    <div className="w-full min-h-screen bg-background">
+      <div className='w-full font-Inter min-h-screen'>
         {/* Navigation */}
         <Navigation dark={dark} switchTheme={switchTheme} />
 
-        {/* Main Content */}
-        <div className='flex justify-center px-6 pt-12'>
-          <div className='w-full max-w-7xl'>
-            {/* Hero Section */}
-            <div className='text-center mb-12'>
-              <motion.h1
-                transition={{ duration: 0.6}}
-                initial={{y:-20, opacity:0}}
-                animate={{y: 0, opacity:1}}
-                className='text-white font-bold text-5xl md:text-7xl leading-tight mb-4'
-              >
-                Optimize Your
-              </motion.h1>
-              <motion.h1
-                transition={{ duration: 0.6, delay: 0.2}}
-                initial={{y:20, opacity:0}}
-                animate={{y: 0, opacity:1}}
-                className='text-white font-bold text-5xl md:text-7xl leading-tight mb-6'
-              >
-                Social Previews
-              </motion.h1>
-              <motion.p
-                transition={{ duration: 0.6, delay: 0.4}}
-                initial={{opacity:0}}
-                animate={{opacity:1}}
-                className='text-white/80 text-xl max-w-2xl mx-auto mb-8'
-              >
-                Generate perfect social media cards for Twitter, Facebook, LinkedIn, and more. 
-                Get AI-powered optimization scores and SEO recommendations.
-              </motion.p>
-            </div>
-
-            {/* URL Input */}
-            <motion.div 
-              transition={{ duration: 0.8, delay: 0.6}}
-              initial={{opacity:0, y: 20}}
-              animate={{opacity:1, y: 0}}
-              className='flex justify-center mb-12'
-            >
-              <div className='w-full max-w-2xl'>
-                <form onSubmit={handleSubmit} className="flex gap-4">
-                  <input 
-                    type="text" 
-                    value={inputUrl}
-                    onChange={(e) => setInputUrl(e.target.value)}
-                    placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
-                    className='flex-1 bg-white/90 backdrop-blur-sm border-0 h-14 px-6 outline-none rounded-xl text-gray-800 placeholder-gray-500 text-lg shadow-lg'
-                  />
-                  <Button 
-                    type="submit"
-                    disabled={loading}
-                    size="lg"
-                    className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14'
-                  >
-                    {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Search className="mr-2 h-4 w-4" />
-                        Analyze
-                      </>
-                    )}
-                  </Button>
-                </form>
+        {/* Hero Section with new background */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-hero-bg via-surface to-surface-secondary">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+          
+          {/* Main Content */}
+          <div className='flex justify-center px-6 pt-16 pb-24'>
+            <div className='w-full max-w-7xl'>
+              {/* Hero Section */}
+              <div className='text-center mb-16'>
+                <motion.div
+                  transition={{ duration: 0.6}}
+                  initial={{y:-20, opacity:0}}
+                  animate={{y: 0, opacity:1}}
+                  className="inline-flex items-center rounded-full border border-border bg-surface/50 backdrop-blur-sm px-4 py-2 text-sm text-muted-foreground mb-8"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  AI-Powered Social Media Optimization
+                </motion.div>
+                
+                <motion.h1
+                  transition={{ duration: 0.6, delay: 0.1}}
+                  initial={{y:-20, opacity:0}}
+                  animate={{y: 0, opacity:1}}
+                  className='hero-text font-bold text-5xl md:text-7xl leading-tight mb-4'
+                >
+                  Optimize Your
+                </motion.h1>
+                <motion.h1
+                  transition={{ duration: 0.6, delay: 0.2}}
+                  initial={{y:20, opacity:0}}
+                  animate={{y: 0, opacity:1}}
+                  className='hero-accent font-bold text-5xl md:text-7xl leading-tight mb-6'
+                >
+                  Social Previews
+                </motion.h1>
+                <motion.p
+                  transition={{ duration: 0.6, delay: 0.4}}
+                  initial={{opacity:0}}
+                  animate={{opacity:1}}
+                  className='text-muted-foreground text-xl max-w-2xl mx-auto mb-8'
+                >
+                  Generate perfect social media cards for Twitter, Facebook, LinkedIn, and more. 
+                  Get AI-powered optimization scores and SEO recommendations.
+                </motion.p>
               </div>
-            </motion.div>
 
-            {/* Error Display */}
-            {error && (
-              <div className="flex justify-center mb-8">
-                <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-100 rounded-xl p-6 max-w-2xl w-full">
-                  <h3 className="text-lg font-semibold mb-2">Error</h3>
-                  <p>{error}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Main Interface */}
-            {(metaData || customData.title || error) && !loading && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden"
+              {/* URL Input */}
+              <motion.div 
+                transition={{ duration: 0.8, delay: 0.6}}
+                initial={{opacity:0, y: 20}}
+                animate={{opacity:1, y: 0}}
+                className='flex justify-center mb-16'
               >
-                {/* Tab Navigation */}
-                <div className="border-b border-gray-200">
-                  <nav className="flex">
-                    {tabs.map((tab) => {
-                      const IconComponent = tab.icon
-                      return (
-                        <button
-                          key={tab.id}
-                          onClick={() => setActiveTab(tab.id)}
-                          className={`flex items-center px-6 py-4 text-sm font-medium transition-colors duration-200 ${
-                            activeTab === tab.id
-                              ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
-                              : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                          }`}
-                        >
-                          <IconComponent className="mr-2 h-4 w-4" />
-                          {tab.label}
-                          {tab.id === 'ai-score' && aiScore && (
-                            <span className={`ml-2 px-2 py-1 rounded-full text-xs font-bold ${
-                              aiScore.score >= 80 ? 'bg-green-100 text-green-800' :
-                              aiScore.score >= 60 ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-red-100 text-red-800'
-                            }`}>
-                              {aiScore.score}
-                            </span>
-                          )}
-                        </button>
-                      )
-                    })}
-                  </nav>
-                </div>
-
-                {/* Tab Content */}
-                <div className="p-6">
-                  {activeTab === 'edit' && (
-                    <EditPanel 
-                      metaData={metaData}
-                      customData={customData}
-                      updateCustomData={updateCustomData}
+                <div className='w-full max-w-2xl'>
+                  <form onSubmit={handleSubmit} className="flex gap-4">
+                    <input 
+                      type="text" 
+                      value={inputUrl}
+                      onChange={(e) => setInputUrl(e.target.value)}
+                      placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
+                      className='flex-1 bg-surface/80 backdrop-blur-sm border border-border h-14 px-6 outline-none rounded-xl text-foreground placeholder-muted-foreground text-lg shadow-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all'
                     />
-                  )}
-                  
-                  {activeTab === 'preview' && (
-                    <PreviewPanel 
-                      data={{ ...metaData, ...customData }}
-                    />
-                  )}
-                  
-                  {activeTab === 'code' && (
-                    <CodePanel 
-                      data={{ ...metaData, ...customData }}
-                    />
-                  )}
-                  
-                  {activeTab === 'ai-score' && (
-                    <AIScorePanel 
-                      aiScore={aiScore}
-                      data={{ ...metaData, ...customData }}
-                    />
-                  )}
+                    <Button 
+                      type="submit"
+                      disabled={loading}
+                      size="lg"
+                      className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14'
+                    >
+                      {loading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
+                      ) : (
+                        <>
+                          <Search className="mr-2 h-4 w-4" />
+                          Analyze
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </div>
               </motion.div>
-            )}
+
+              {/* Error Display */}
+              {error && (
+                <div className="flex justify-center mb-8">
+                  <div className="bg-destructive/10 backdrop-blur-sm border border-destructive/20 text-destructive rounded-xl p-6 max-w-2xl w-full">
+                    <h3 className="text-lg font-semibold mb-2">Error</h3>
+                    <p>{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Main Interface */}
+              {(metaData || customData.title || error) && !loading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="bg-card/95 backdrop-blur-sm border border-border rounded-2xl shadow-2xl overflow-hidden"
+                >
+                  {/* Tab Navigation */}
+                  <div className="border-b border-border bg-surface/50">
+                    <nav className="flex">
+                      {tabs.map((tab) => {
+                        const IconComponent = tab.icon
+                        return (
+                          <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center px-6 py-4 text-sm font-medium transition-colors duration-200 ${
+                              activeTab === tab.id
+                                ? 'text-primary border-b-2 border-primary bg-primary/5'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                            }`}
+                          >
+                            <IconComponent className="mr-2 h-4 w-4" />
+                            {tab.label}
+                            {tab.id === 'ai-score' && aiScore && (
+                              <span className={`ml-2 px-2 py-1 rounded-full text-xs font-bold ${
+                                aiScore.score >= 80 ? 'bg-success/10 text-success border border-success/20' :
+                                aiScore.score >= 60 ? 'bg-warning/10 text-warning border border-warning/20' :
+                                'bg-destructive/10 text-destructive border border-destructive/20'
+                              }`}>
+                                {aiScore.score}
+                              </span>
+                            )}
+                          </button>
+                        )
+                      })}
+                    </nav>
+                  </div>
+
+                  {/* Tab Content */}
+                  <div className="p-6 bg-card">
+                    {activeTab === 'edit' && (
+                      <EditPanel 
+                        metaData={metaData}
+                        customData={customData}
+                        updateCustomData={updateCustomData}
+                      />
+                    )}
+                    
+                    {activeTab === 'preview' && (
+                      <PreviewPanel 
+                        data={{ ...metaData, ...customData }}
+                      />
+                    )}
+                    
+                    {activeTab === 'code' && (
+                      <CodePanel 
+                        data={{ ...metaData, ...customData }}
+                      />
+                    )}
+                    
+                    {activeTab === 'ai-score' && (
+                      <AIScorePanel 
+                        aiScore={aiScore}
+                        data={{ ...metaData, ...customData }}
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </div>
           </div>
         </div>
       </div>
