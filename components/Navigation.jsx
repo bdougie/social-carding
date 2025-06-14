@@ -26,44 +26,6 @@ const Navigation = ({ dark, switchTheme }) => {
           <span className="text-xl font-bold tracking-tight text-foreground">SocialCarding</span>
         </div>
 
-        {/* Navigation Menu */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="text-foreground">Features</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                  <li className="row-span-3">
-                    <NavigationMenuLink asChild>
-                      <a
-                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                        href="/"
-                      >
-                        <Target className="h-6 w-6 text-primary" />
-                        <div className="mb-2 mt-4 text-lg font-medium text-foreground">
-                          SocialCarding
-                        </div>
-                        <p className="text-sm leading-tight text-muted-foreground">
-                          Optimize your social media previews with AI-powered insights and real-time previews.
-                        </p>
-                      </a>
-                    </NavigationMenuLink>
-                  </li>
-                  <ListItem href="#" title="Live Preview">
-                    See how your content appears across all platforms
-                  </ListItem>
-                  <ListItem href="#" title="AI Scoring">
-                    Get optimization scores and recommendations
-                  </ListItem>
-                  <ListItem href="#" title="Meta Generator">
-                    Generate perfect Open Graph and Twitter Card tags
-                  </ListItem>
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-
         {/* Right side actions */}
         <div className="flex items-center space-x-2">
           {/* Theme Toggle */}
@@ -79,38 +41,6 @@ const Navigation = ({ dark, switchTheme }) => {
             ) : (
               <Moon className="h-4 w-4 transition-all" />
             )}
-          </Button>
-
-          {/* CTA Buttons */}
-          <div className="hidden sm:flex items-center space-x-2">
-            <Button variant="ghost" size="sm" className="text-foreground">
-              Sign In
-            </Button>
-            <Button size="sm">
-              Get Started
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden h-9 w-9 text-foreground hover:bg-accent hover:text-accent-foreground"
-            aria-label="Open menu"
-          >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
           </Button>
         </div>
       </div>
