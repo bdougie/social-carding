@@ -1,13 +1,13 @@
 "use client"
 
 import Image from 'next/image'
-import { Heart, MessageCircle, Share, Repeat2, ThumbsUp, MoreHorizontal } from 'lucide-react'
+import { Heart, MessageCircle, Share, Repeat2, ThumbsUp, MoreHorizontal, Hash, AtSign, Reply, Plus } from 'lucide-react'
 
 function PreviewPanel({ data }) {
   const platforms = [
     {
-      name: 'Facebook',
-      component: <FacebookPreview data={data} />
+      name: 'Discord',
+      component: <DiscordPreview data={data} />
     },
     {
       name: 'Twitter/X',
@@ -18,8 +18,8 @@ function PreviewPanel({ data }) {
       component: <LinkedInPreview data={data} />
     },
     {
-      name: 'Instagram',
-      component: <InstagramPreview data={data} />
+      name: 'Bluesky',
+      component: <BlueskyPreview data={data} />
     }
   ]
 
@@ -44,65 +44,62 @@ function PreviewPanel({ data }) {
   )
 }
 
-function FacebookPreview({ data }) {
+function DiscordPreview({ data }) {
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-card shadow-sm">
-      {/* Post Header */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-            <span className="text-primary-foreground font-semibold">FB</span>
+    <div className="bg-[#36393f] rounded-lg overflow-hidden shadow-sm max-w-md">
+      {/* Message Header */}
+      <div className="p-4">
+        <div className="flex items-start space-x-3 mb-3">
+          <div className="w-10 h-10 bg-[#5865f2] rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-semibold text-sm">YU</span>
           </div>
-          <div>
-            <p className="font-semibold text-foreground">Your Page</p>
-            <p className="text-xs text-muted-foreground">2 hours ago</p>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline space-x-2">
+              <p className="font-semibold text-white text-sm">Your Username</p>
+              <span className="text-[#72767d] text-xs">Today at 12:34 PM</span>
+            </div>
+            <p className="text-[#dcddde] text-sm mt-1">Check out this amazing content!</p>
           </div>
         </div>
-      </div>
 
-      {/* Link Preview */}
-      <div className="border border-border">
-        {data.image && (
-          <div className="relative w-full h-48">
-            <Image
-              src={data.image}
-              alt="Preview"
-              fill
-              style={{ objectFit: 'cover' }}
-              unoptimized
-            />
+        {/* Link Embed */}
+        <div className="bg-[#2f3136] border-l-4 border-[#5865f2] rounded-r overflow-hidden">
+          {data.image && (
+            <div className="relative w-full h-48">
+              <Image
+                src={data.image}
+                alt="Preview"
+                fill
+                style={{ objectFit: 'cover' }}
+                unoptimized
+              />
+            </div>
+          )}
+          <div className="p-4">
+            <div className="text-xs text-[#00b0f4] mb-1 font-medium">
+              {data.url ? new URL(data.url).hostname.toUpperCase() : 'EXAMPLE.COM'}
+            </div>
+            <h3 className="font-semibold text-[#00b0f4] mb-1 text-sm hover:underline cursor-pointer line-clamp-2">
+              {data.title || 'Your Title Here'}
+            </h3>
+            <p className="text-[#dcddde] text-sm line-clamp-3">
+              {data.description || 'Your description will appear here...'}
+            </p>
           </div>
-        )}
-        <div className="p-4 bg-muted/30">
-          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
-            {data.url ? new URL(data.url).hostname : 'example.com'}
-          </p>
-          <h3 className="font-semibold text-foreground mb-1 line-clamp-2">
-            {data.title || 'Your Title Here'}
-          </h3>
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {data.description || 'Your description will appear here...'}
-          </p>
         </div>
-      </div>
 
-      {/* Engagement */}
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center justify-between text-muted-foreground">
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-              <ThumbsUp className="h-4 w-4" />
-              <span className="text-sm">Like</span>
-            </button>
-            <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-              <MessageCircle className="h-4 w-4" />
-              <span className="text-sm">Comment</span>
-            </button>
-            <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-              <Share className="h-4 w-4" />
-              <span className="text-sm">Share</span>
-            </button>
-          </div>
+        {/* Reactions */}
+        <div className="flex items-center space-x-4 mt-3 text-[#72767d]">
+          <button className="flex items-center space-x-1 hover:text-[#dcddde] transition-colors text-xs">
+            <div className="w-4 h-4 bg-[#5865f2] rounded-full flex items-center justify-center">
+              <span className="text-white text-xs">👍</span>
+            </div>
+            <span>2</span>
+          </button>
+          <button className="flex items-center space-x-1 hover:text-[#dcddde] transition-colors text-xs">
+            <Reply className="h-3 w-3" />
+            <span>Reply</span>
+          </button>
         </div>
       </div>
     </div>
@@ -240,54 +237,79 @@ function LinkedInPreview({ data }) {
   )
 }
 
-function InstagramPreview({ data }) {
+function BlueskyPreview({ data }) {
   return (
-    <div className="border border-border rounded-lg overflow-hidden bg-card shadow-sm max-w-sm mx-auto">
+    <div className="border border-border rounded-lg overflow-hidden bg-card shadow-sm max-w-md">
       {/* Post Header */}
-      <div className="p-4 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gradient-to-r from-primary to-primary/80 rounded-full flex items-center justify-center">
-            <span className="text-primary-foreground text-sm font-semibold">IG</span>
-          </div>
-          <p className="font-semibold text-foreground">youraccount</p>
-        </div>
-        <MoreHorizontal className="h-5 w-5 text-muted-foreground" />
-      </div>
-
-      {/* Image */}
-      <div className="relative w-full h-64">
-        {data.image ? (
-          <Image
-            src={data.image}
-            alt="Preview"
-            fill
-            style={{ objectFit: 'cover' }}
-            unoptimized
-          />
-        ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground">Your image here</span>
-          </div>
-        )}
-      </div>
-
-      {/* Engagement */}
       <div className="p-4">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-4">
-            <Heart className="h-6 w-6 hover:text-destructive cursor-pointer transition-colors" />
-            <MessageCircle className="h-6 w-6 hover:text-muted-foreground cursor-pointer transition-colors" />
-            <Share className="h-6 w-6 hover:text-muted-foreground cursor-pointer transition-colors" />
+        <div className="flex items-start space-x-3 mb-3">
+          <div className="w-10 h-10 bg-[#0085ff] rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-white font-semibold text-sm">YU</span>
           </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-baseline space-x-1">
+              <p className="font-semibold text-foreground text-sm">Your Name</p>
+              <p className="text-muted-foreground text-sm">@youraccount.bsky.social</p>
+            </div>
+            <p className="text-muted-foreground text-xs">2h</p>
+          </div>
+          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
         </div>
         
-        <p className="text-sm text-foreground">
-          <span className="font-semibold">youraccount</span>{' '}
-          {data.title || 'Your caption here...'} 
-          {data.description && (
-            <span className="text-muted-foreground"> {data.description}</span>
+        <p className="text-foreground mb-3 text-sm">Check out this amazing content! 🚀</p>
+
+        {/* Link Card */}
+        <div className="border border-border rounded-lg overflow-hidden bg-muted/30">
+          {data.image && (
+            <div className="relative w-full h-40">
+              <Image
+                src={data.image}
+                alt="Preview"
+                fill
+                style={{ objectFit: 'cover' }}
+                unoptimized
+              />
+            </div>
           )}
-        </p>
+          <div className="p-3">
+            <p className="text-xs text-muted-foreground mb-1">
+              {data.url ? new URL(data.url).hostname : 'example.com'}
+            </p>
+            <h3 className="font-semibold text-foreground text-sm mb-1 line-clamp-2">
+              {data.title || 'Your Title Here'}
+            </h3>
+            <p className="text-xs text-muted-foreground line-clamp-2">
+              {data.description || 'Your description will appear here...'}
+            </p>
+          </div>
+        </div>
+
+        {/* Engagement */}
+        <div className="flex items-center justify-between mt-4 text-muted-foreground">
+          <button className="flex items-center space-x-1 hover:text-[#0085ff] transition-colors">
+            <MessageCircle className="h-4 w-4" />
+            <span className="text-sm">Reply</span>
+          </button>
+          <button className="flex items-center space-x-1 hover:text-[#0085ff] transition-colors">
+            <Repeat2 className="h-4 w-4" />
+            <span className="text-sm">Repost</span>
+          </button>
+          <button className="flex items-center space-x-1 hover:text-destructive transition-colors">
+            <Heart className="h-4 w-4" />
+            <span className="text-sm">Like</span>
+          </button>
+          <button className="flex items-center space-x-1 hover:text-[#0085ff] transition-colors">
+            <Share className="h-4 w-4" />
+            <span className="text-sm">Share</span>
+          </button>
+        </div>
+
+        {/* Bluesky-specific engagement stats */}
+        <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
+          <span>12 replies</span>
+          <span>8 reposts</span>
+          <span>24 likes</span>
+        </div>
       </div>
     </div>
   )
