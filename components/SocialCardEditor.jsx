@@ -349,26 +349,7 @@ function SocialCardEditor() {
                 initial={{opacity:0, y: 20}}
                 animate={{opacity:1, y: 0}}
                 className='flex justify-center mb-16'
-              >
-                <div className='w-full max-w-2xl'>
-                  {/* Network Status Indicator - Moved to left side */}
-                  {isMounted && (
-                    <div className="flex items-center mb-4">
-                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                        {isOnline ? (
-                          <CheckCircle className="h-4 w-4 text-success" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-destructive" />
-                        )}
-                      </div>
-                      {debugInfo && (
-                        <div className="ml-4 text-xs text-muted-foreground">
-                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
+              >   
                   <form onSubmit={handleSubmit} className="flex gap-4">
                     <input 
                       type="text" 
@@ -392,6 +373,24 @@ function SocialCardEditor() {
                       )}
                     </Button>
                   </form>
+                                <div className='w-full max-w-2xl'>
+                  {/* Network Status Indicator - Moved to left side */}
+                  {isMounted && (
+                    <div className="flex items-center mb-4">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        {isOnline ? (
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        ) : (
+                          <AlertCircle className="h-4 w-4 text-destructive" />
+                        )}
+                      </div>
+                      {debugInfo && (
+                        <div className="ml-4 text-xs text-muted-foreground">
+                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </motion.div>
 
