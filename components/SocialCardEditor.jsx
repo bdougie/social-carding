@@ -349,7 +349,10 @@ function SocialCardEditor() {
                 initial={{opacity:0, y: 20}}
                 animate={{opacity:1, y: 0}}
                 className='flex justify-center mb-16'
-              >   
+              >
+                <div className='w-full max-w-2xl'>
+
+                  
                   <form onSubmit={handleSubmit} className="flex gap-4">
                     <input 
                       type="text" 
@@ -373,8 +376,7 @@ function SocialCardEditor() {
                       )}
                     </Button>
                   </form>
-                                <div className='w-full max-w-2xl'>
-                  {/* Network Status Indicator - Moved to left side */}
+                                    {/* Network Status Indicator - Moved to left side */}
                   {isMounted && (
                     <div className="flex items-center mb-4">
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
