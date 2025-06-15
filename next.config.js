@@ -20,9 +20,7 @@ const nextConfig = {
     ],
     unoptimized: true, // For Netlify static deployment
   },
-  experimental: {
-    serverComponentsExternalPackages: ['cheerio'],
-  },
+  serverExternalPackages: ['cheerio'],
 }
 
 module.exports = nextConfig
