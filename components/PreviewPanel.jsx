@@ -148,26 +148,6 @@ function TwitterPreview({ data }) {
             </p>
           </div>
         </div>
-
-        {/* Engagement */}
-        <div className="flex items-center justify-between mt-4 text-muted-foreground">
-          <button className="flex items-center space-x-2 hover:text-primary transition-colors">
-            <MessageCircle className="h-4 w-4" />
-            <span className="text-sm">Reply</span>
-          </button>
-          <button className="flex items-center space-x-2 hover:text-success transition-colors">
-            <Repeat2 className="h-4 w-4" />
-            <span className="text-sm">Retweet</span>
-          </button>
-          <button className="flex items-center space-x-2 hover:text-destructive transition-colors">
-            <Heart className="h-4 w-4" />
-            <span className="text-sm">Like</span>
-          </button>
-          <button className="flex items-center space-x-2 hover:text-primary transition-colors">
-            <Share className="h-4 w-4" />
-            <span className="text-sm">Share</span>
-          </button>
-        </div>
       </div>
     </div>
   )
@@ -213,24 +193,6 @@ function LinkedInPreview({ data }) {
           <p className="text-xs text-muted-foreground">
             {data.url ? new URL(data.url).hostname : 'example.com'}
           </p>
-        </div>
-      </div>
-
-      {/* Engagement */}
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center justify-between text-muted-foreground">
-          <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-            <ThumbsUp className="h-4 w-4" />
-            <span className="text-sm">Like</span>
-          </button>
-          <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-            <MessageCircle className="h-4 w-4" />
-            <span className="text-sm">Comment</span>
-          </button>
-          <button className="flex items-center space-x-1 hover:text-primary transition-colors">
-            <Share className="h-4 w-4" />
-            <span className="text-sm">Share</span>
-          </button>
         </div>
       </div>
     </div>
