@@ -352,6 +352,30 @@ function SocialCardEditor() {
                 className='flex justify-center mb-16'
               >
                 <div className='w-full max-w-2xl'>
+                  {/* Network Status Indicator - Moved to left side */}
+                  {isMounted && (
+                    <div className="flex items-center mb-4">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        {isOnline ? (
+                          <>
+                            <CheckCircle className="h-4 w-4 text-success" />
+                            <span>Online</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertCircle className="h-4 w-4 text-destructive" />
+                            <span>Offline</span>
+                          </>
+                        )}
+                      </div>
+                      {debugInfo && (
+                        <div className="ml-4 text-xs text-muted-foreground">
+                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
                   <form onSubmit={handleSubmit} className="flex gap-4">
                     <input 
                       type="text" 
@@ -376,30 +400,6 @@ function SocialCardEditor() {
                       )}
                     </Button>
                   </form>
-                  
-                  {/* Network Status Indicator - Moved below the form */}
-                  {isMounted && (
-                    <div className="flex items-center justify-center mt-4 space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center space-x-2">
-                        {isOnline ? (
-                          <>
-                            <CheckCircle className="h-4 w-4 text-success" />
-                            <span>Online</span>
-                          </>
-                        ) : (
-                          <>
-                            <AlertCircle className="h-4 w-4 text-destructive" />
-                            <span>Offline</span>
-                          </>
-                        )}
-                      </div>
-                      {debugInfo && (
-                        <div className="text-xs">
-                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               </motion.div>
 
