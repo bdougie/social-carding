@@ -23,7 +23,7 @@ export const metadata = {
     siteName: 'SocialCarding',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/social.png',
         width: 1200,
         height: 630,
         alt: 'SocialCarding - AI-Powered Social Media Optimization Tool',
@@ -36,7 +36,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'SocialCarding - Optimize Your Social Media Previews',
     description: 'Generate perfect social media cards. Get optimization scores and recommendations.',
-    images: ['/twitter-image.jpg'],
+    images: ['/social.png'],
     creator: '@socialcarding',
     site: '@socialcarding',
   },
