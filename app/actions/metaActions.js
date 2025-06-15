@@ -2,6 +2,32 @@
 
 import { load } from 'cheerio';
 
+export async function downloadImage(imageUrl) {
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64 = buffer.toString('base64');
+    const contentType = response.headers.get('content-type') || 'image/png';
+    
+    return {
+      success: true,
+      data: `data:${contentType};base64,${base64}`,
+      contentType
+    };
+  } catch (error) {
+    console.error('Error downloading image:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
 export async function fetchMetadata(url) {
   console.log('🔍 Starting metadata fetch for URL:', url);
   
