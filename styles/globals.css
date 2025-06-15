@@ -115,31 +115,82 @@
   color: hsl(var(--text-secondary));
 }
 
-/* Enhanced contrast for specific elements */
-.dark .placeholder-muted-foreground::placeholder {
-  color: hsl(0 0% 65%); /* #A6A6A6 - Higher contrast placeholder */
+/* CRITICAL: Form input text visibility fixes for dark mode */
+.dark input[type="text"],
+.dark input[type="url"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark textarea,
+.dark select {
+  color: hsl(0 0% 95%) !important;           /* #F2F2F2 - Force high contrast text */
+  background-color: hsl(0 0% 18%) !important; /* #2E2E2E - Dark input background */
+  border-color: hsl(0 0% 30%) !important;    /* #4D4D4D - Visible border */
 }
 
-.dark input:focus,
-.dark textarea:focus {
-  border-color: hsl(213 94% 68%); /* #4A90E2 - Bright focus border */
-  box-shadow: 0 0 0 2px hsl(213 94% 68% / 0.2);
+.dark input[type="text"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+  color: hsl(0 0% 95%) !important;           /* #F2F2F2 - Maintain text color on focus */
+  background-color: hsl(0 0% 20%) !important; /* #333333 - Slightly lighter on focus */
+  border-color: hsl(213 94% 68%) !important; /* #4A90E2 - Bright focus border */
+  box-shadow: 0 0 0 2px hsl(213 94% 68% / 0.2) !important;
+}
+
+/* Enhanced placeholder text visibility */
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: hsl(0 0% 65%) !important;           /* #A6A6A6 - Higher contrast placeholder */
+  opacity: 1 !important;
+}
+
+.dark .placeholder-muted-foreground::placeholder {
+  color: hsl(0 0% 65%) !important;           /* #A6A6A6 - Higher contrast placeholder */
+  opacity: 1 !important;
+}
+
+/* Text color overrides for all text elements in dark mode */
+.dark .text-foreground {
+  color: hsl(0 0% 95%) !important;           /* #F2F2F2 - High contrast text */
 }
 
 .dark .text-muted-foreground {
-  color: hsl(0 0% 75%); /* #BFBFBF - Ensure 4.5:1 contrast ratio */
+  color: hsl(0 0% 75%) !important;           /* #BFBFBF - Ensure 4.5:1 contrast ratio */
 }
 
 /* Button contrast improvements */
 .dark button:disabled {
-  background-color: hsl(0 0% 25%); /* #404040 */
-  color: hsl(0 0% 60%); /* #999999 */
+  background-color: hsl(0 0% 25%) !important; /* #404040 */
+  color: hsl(0 0% 60%) !important;           /* #999999 */
 }
 
 .dark .bg-muted\/50 {
-  background-color: hsl(0 0% 18% / 0.8); /* Semi-transparent muted background */
+  background-color: hsl(0 0% 18% / 0.8) !important; /* Semi-transparent muted background */
 }
 
 .dark .border-border {
-  border-color: hsl(0 0% 30%); /* #4D4D4D - More visible borders */
+  border-color: hsl(0 0% 30%) !important;    /* #4D4D4D - More visible borders */
+}
+
+/* Specific fixes for the main URL input */
+.dark .bg-surface\/80 {
+  background-color: hsl(0 0% 18%) !important; /* #2E2E2E - Dark input background */
+  color: hsl(0 0% 95%) !important;           /* #F2F2F2 - High contrast text */
+}
+
+/* Ensure all form controls have proper contrast */
+.dark .bg-background {
+  background-color: hsl(0 0% 18%) !important; /* #2E2E2E for form backgrounds */
+  color: hsl(0 0% 95%) !important;           /* #F2F2F2 for text */
+}
+
+/* Override any conflicting Tailwind classes */
+.dark input,
+.dark textarea {
+  color: hsl(0 0% 95%) !important;
+  background-color: hsl(0 0% 18%) !important;
 }
