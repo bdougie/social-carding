@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from 'react'
-import { Upload, Image as ImageIcon, Sparkles, RefreshCw, Copy, Check, Download } from 'lucide-react'
+import { Upload, Image as ImageIcon, Sparkles, RefreshCw, Copy, Check, Download, X } from 'lucide-react'
 import { Button } from './ui/button'
 import Image from 'next/image'
 import { downloadImage } from '../app/actions/metaActions'
@@ -61,6 +61,14 @@ function EditPanel({ metaData, customData, updateCustomData }) {
     } catch (error) {
       console.error('Error downloading image:', error)
     }
+  }
+
+  const handleRemoveImage = () => {
+    // Reset to original image from metadata if available
+    const originalImage = metaData?.image?.url || null
+    updateCustomData('image', originalImage)
+    setImagePreview(null)
+    setIsImageChanged(false)
   }
 
   const generateProductDescriptions = async () => {
@@ -358,14 +366,22 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                       Change Image
                     </Button>
                     <Button
-                      onClick={handleDownloadImage}
-                      variant="outline"
-                      disabled={isImageChanged}
+                      onClick={isImageChanged ? handleRemoveImage : handleDownloadImage}
+                      variant={isImageChanged ? "destructive" : "outline"}
                       className="inline-flex items-center"
-                      title={isImageChanged ? "Download not available for uploaded images" : "Download original image"}
+                      title={isImageChanged ? "Remove uploaded image" : "Download original image"}
                     >
-                      <Download className="mr-2 h-4 w-4" />
-                      Download
+                      {isImageChanged ? (
+                        <>
+                          <X className="mr-2 h-4 w-4" />
+                          Remove
+                        </>
+                      ) : (
+                        <>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
