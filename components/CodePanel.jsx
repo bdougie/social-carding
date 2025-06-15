@@ -130,7 +130,7 @@ ${generateSchemaMarkup()}`
     <div className="space-y-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">Copy Meta Tags</h2>
-        <p className="text-muted-foreground">Copy the HTML meta tags and paste them into your website's &lt;head&gt; section. You can edit the content directly below.</p>
+        <p className="text-muted-foreground">Generate perfect social media cards. Get optimization scores and recommendations. You can edit the content directly below.</p>
       </div>
 
       <div className="space-y-6">
@@ -216,7 +216,7 @@ ${generateSchemaMarkup()}`
             <strong>2. Copy your customized tags</strong> - Use the Copy button to copy your edited version
           </div>
           <div>
-            <strong>3. Paste in your HTML</strong> - Add the tags inside the &lt;head&gt; section of your webpage
+            <strong>3. Paste in your HTML</strong> - Add the tags inside the <head> section of your webpage
           </div>
           <div>
             <strong>4. Test your implementation</strong> - Use tools like Facebook Debugger or Twitter Card Validator

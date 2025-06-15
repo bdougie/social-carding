@@ -123,7 +123,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
     <div className="space-y-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">Customize Your Social Card</h2>
-        <p className="text-muted-foreground">Modify the title, description, and image to optimize visibility and engagement.</p>
+        <p className="text-muted-foreground">Generate perfect social media cards. Get optimization scores and recommendations.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -339,8 +339,7 @@ function SocialCardEditor() {
                   animate={{opacity:1}}
                   className='text-muted-foreground text-xl max-w-2xl mx-auto mb-8'
                 >
-                  Generate perfect social media cards for Twitter, Facebook, LinkedIn, and more. 
-                  Get AI-powered optimization scores and SEO recommendations.
+                  Generate perfect social media cards. Get optimization scores and recommendations.
                 </motion.p>
               </div>
 
@@ -357,15 +356,9 @@ function SocialCardEditor() {
                     <div className="flex items-center mb-4">
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         {isOnline ? (
-                          <>
-                            <CheckCircle className="h-4 w-4 text-success" />
-                            <span>Online</span>
-                          </>
+                          <CheckCircle className="h-4 w-4 text-success" />
                         ) : (
-                          <>
-                            <AlertCircle className="h-4 w-4 text-destructive" />
-                            <span>Offline</span>
-                          </>
+                          <AlertCircle className="h-4 w-4 text-destructive" />
                         )}
                       </div>
                       {debugInfo && (
@@ -382,13 +375,13 @@ function SocialCardEditor() {
                       value={inputUrl}
                       onChange={(e) => setInputUrl(e.target.value)}
                       placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
-                      className='flex-1 bg-surface/80 backdrop-blur-sm border border-border h-14 px-6 outline-none rounded-xl text-foreground placeholder-muted-foreground text-lg shadow-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all'
+                      className='flex-1 bg-surface/80 backdrop-blur-sm border border-border h-14 px-6 outline-none rounded-xl text-foreground placeholder-muted-foreground text-lg shadow-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all font-Inter'
                     />
                     <Button 
                       type="submit"
                       disabled={loading}
                       size="lg"
-                      className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14'
+                      className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14 text-lg font-Inter'
                     >
                       {loading ? (
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>

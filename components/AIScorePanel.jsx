@@ -44,7 +44,7 @@ function AIScorePanel({ aiScore, data }) {
     <div className="space-y-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">AI Optimization Score</h2>
-        <p className="text-muted-foreground">Get AI-powered insights to improve your social media performance</p>
+        <p className="text-muted-foreground">Generate perfect social media cards. Get optimization scores and recommendations.</p>
       </div>
 
       {/* Overall Score */}

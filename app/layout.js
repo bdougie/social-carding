@@ -2,7 +2,7 @@ import '../styles/globals.css';
 
 export const metadata = {
   title: 'SocialCarding - Optimize Your Social Media Previews',
-  description: 'Generate, preview, and optimize social media cards for Twitter, Facebook, LinkedIn, Instagram, and Pinterest. AI-powered scoring and SEO recommendations.',
+  description: 'Generate perfect social media cards. Get optimization scores and recommendations.',
 };
 
 export default function RootLayout({ children }) {
