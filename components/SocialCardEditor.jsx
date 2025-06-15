@@ -8,7 +8,8 @@ import PreviewPanel from './PreviewPanel'
 import CodePanel from './CodePanel'
 import AIScorePanel from './AIScorePanel'
 import { Button } from './ui/button'
-import { fetchMetadata, validateUrl } from '../app/actions/metaActions'
+import { fetchMetadata } from '../app/actions/metaActions'
+import { validateUrl } from '../lib/validation'
 import { Search, Edit, Eye, Code, Bot, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
 
 function SocialCardEditor() {
@@ -26,6 +27,8 @@ function SocialCardEditor() {
   const [aiScore, setAiScore] = useState(null)
   const [inputUrl, setInputUrl] = useState('')
   const [debugInfo, setDebugInfo] = useState(null)
+  const [isOnline, setIsOnline] = useState(true)
+  const [isMounted, setIsMounted] = useState(false)
 
   const initTheme = () => {
     if (typeof window !== 'undefined') {
@@ -234,8 +237,19 @@ function SocialCardEditor() {
 
   useEffect(() => {
     initTheme()
+    setIsMounted(true)
     
     if (typeof window !== 'undefined') {
+      // Set initial online status
+      setIsOnline(navigator.onLine)
+      
+      // Online/offline event listeners
+      const handleOnline = () => setIsOnline(true)
+      const handleOffline = () => setIsOnline(false)
+      
+      window.addEventListener('online', handleOnline)
+      window.addEventListener('offline', handleOffline)
+      
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
       const handleChange = (e) => {
         if (localStorage.getItem("dark") === null) {
@@ -258,6 +272,9 @@ function SocialCardEditor() {
       }
       
       return () => {
+        window.removeEventListener('online', handleOnline)
+        window.removeEventListener('offline', handleOffline)
+        
         if (mediaQuery.removeEventListener) {
           mediaQuery.removeEventListener('change', handleChange)
         } else {
@@ -361,26 +378,28 @@ function SocialCardEditor() {
                   </form>
                   
                   {/* Network Status Indicator */}
-                  <div className="flex items-center justify-center mt-4 space-x-4 text-sm text-muted-foreground">
-                    <div className="flex items-center space-x-2">
-                      {navigator.onLine ? (
-                        <>
-                          <CheckCircle className="h-4 w-4 text-success" />
-                          <span>Online</span>
-                        </>
-                      ) : (
-                        <>
-                          <AlertCircle className="h-4 w-4 text-destructive" />
-                          <span>Offline</span>
-                        </>
+                  {isMounted && (
+                    <div className="flex items-center justify-center mt-4 space-x-4 text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-2">
+                        {isOnline ? (
+                          <>
+                            <CheckCircle className="h-4 w-4 text-success" />
+                            <span>Online</span>
+                          </>
+                        ) : (
+                          <>
+                            <AlertCircle className="h-4 w-4 text-destructive" />
+                            <span>Offline</span>
+                          </>
+                        )}
+                      </div>
+                      {debugInfo && (
+                        <div className="text-xs">
+                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                        </div>
                       )}
                     </div>
-                    {debugInfo && (
-                      <div className="text-xs">
-                        Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </motion.div>
 
