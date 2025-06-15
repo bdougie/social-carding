@@ -306,7 +306,7 @@ function SocialCardEditor() {
           <div className='flex justify-center px-6 pt-16 pb-24'>
             <div className='w-full max-w-7xl'>
               {/* Hero Section */}
-              <div className='text-center mb-16'>
+              <div className='text-center mb-12'>
                 <motion.div
                   transition={{ duration: 0.6}}
                   initial={{y:-20, opacity:0}}
@@ -348,10 +348,26 @@ function SocialCardEditor() {
                 transition={{ duration: 0.8, delay: 0.6}}
                 initial={{opacity:0, y: 20}}
                 animate={{opacity:1, y: 0}}
-                className='flex justify-center mb-16'
+                className='flex justify-center mb-12'
               >
                 <div className='w-full max-w-2xl'>
-
+                  {/* Network Status Indicator - Moved to left side */}
+                  {isMounted && (
+                    <div className="flex items-center mb-6">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        {isOnline ? (
+                          <CheckCircle className="h-4 w-4 text-success" />
+                        ) : (
+                          <AlertCircle className="h-4 w-4 text-destructive" />
+                        )}
+                      </div>
+                      {debugInfo && (
+                        <div className="ml-4 text-xs text-muted-foreground">
+                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   <form onSubmit={handleSubmit} className="flex gap-4">
                     <input 
@@ -376,23 +392,6 @@ function SocialCardEditor() {
                       )}
                     </Button>
                   </form>
-                                    {/* Network Status Indicator - Moved to left side */}
-                  {isMounted && (
-                    <div className="flex items-center mb-4">
-                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                        {isOnline ? (
-                          <CheckCircle className="h-4 w-4 text-success" />
-                        ) : (
-                          <AlertCircle className="h-4 w-4 text-destructive" />
-                        )}
-                      </div>
-                      {debugInfo && (
-                        <div className="ml-4 text-xs text-muted-foreground">
-                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               </motion.div>
 
