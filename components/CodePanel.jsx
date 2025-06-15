@@ -216,7 +216,7 @@ ${generateSchemaMarkup()}`
             <strong>2. Copy your customized tags</strong> - Use the Copy button to copy your edited version
           </div>
           <div>
-            <strong>3. Paste in your HTML</strong> - Add the tags inside the <head> section of your webpage
+            <strong>3. Paste in your HTML</strong> - Add the tags inside the &lt;head&gt; section of your webpage
           </div>
           <div>
             <strong>4. Test your implementation</strong> - Use tools like Facebook Debugger or Twitter Card Validator
