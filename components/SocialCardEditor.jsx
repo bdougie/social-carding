@@ -374,7 +374,7 @@ function SocialCardEditor() {
                       type="text" 
                       value={inputUrl}
                       onChange={(e) => setInputUrl(e.target.value)}
-                      placeholder='Enter your URL (e.g., https://github.com/bdougie/contributor.info)' 
+                      placeholder='Enter your URL (e.g., https://bolt.new)' 
                       className='flex-1 bg-surface/80 backdrop-blur-sm border border-border h-14 px-6 outline-none rounded-xl text-foreground placeholder-muted-foreground text-lg shadow-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all font-Inter'
                     />
                     <Button 
