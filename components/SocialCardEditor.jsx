@@ -351,8 +351,8 @@ function SocialCardEditor() {
                 className='flex justify-center mb-12'
               >
                 <div className='w-full max-w-2xl'>
-                  {/* Network Status Indicator - Moved to left side */}
-                  {isMounted && (
+                  {/* Network Status Indicator - Only show after submission */}
+                  {isMounted && debugInfo && (
                     <div className="flex items-center mb-6">
                       <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         {isOnline ? (
@@ -361,11 +361,9 @@ function SocialCardEditor() {
                           <AlertCircle className="h-4 w-4 text-destructive" />
                         )}
                       </div>
-                      {debugInfo && (
-                        <div className="ml-4 text-xs text-muted-foreground">
-                          Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
-                        </div>
-                      )}
+                      <div className="ml-4 text-xs text-muted-foreground">
+                        Last attempt: {new Date(debugInfo.timestamp).toLocaleTimeString()}
+                      </div>
                     </div>
                   )}
                   
@@ -377,20 +375,29 @@ function SocialCardEditor() {
                       placeholder='Enter your URL (e.g., https://bolt.new)' 
                       className='flex-1 bg-surface/80 backdrop-blur-sm border border-border h-14 px-6 outline-none rounded-xl text-foreground placeholder-muted-foreground text-lg shadow-lg focus:ring-2 focus:ring-ring focus:border-transparent transition-all font-Inter'
                     />
-                    <Button 
-                      type="submit"
-                      disabled={loading}
-                      size="lg"
-                      className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14 text-lg font-Inter'
-                    >
-                      {loading ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
-                      ) : (
-                        <>
-                          Analyze
-                        </>
+                    <div className="relative group">
+                      <Button 
+                        type="submit"
+                        disabled={loading || !inputUrl.trim()}
+                        onClick={handleSubmit}
+                        size="lg"
+                        className='px-8 rounded-xl font-semibold shadow-lg min-w-[140px] h-14 text-lg font-Inter'
+                      >
+                        {loading ? (
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
+                        ) : (
+                          <>
+                            Analyze
+                          </>
+                        )}
+                      </Button>
+                      {!inputUrl.trim() && !loading && (
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-foreground text-background rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+                          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-foreground"></div>
+                          Please enter a URL to analyze
+                        </div>
                       )}
-                    </Button>
+                    </div>
                   </form>
                 </div>
               </motion.div>
