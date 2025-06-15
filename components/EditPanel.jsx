@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useRef } from 'react'
-import { Upload, Image as ImageIcon, Sparkles, RefreshCw, Copy, Check } from 'lucide-react'
+import { Upload, Image as ImageIcon, Sparkles, RefreshCw, Copy, Check, Download, X } from 'lucide-react'
 import { Button } from './ui/button'
 import Image from 'next/image'
+import { downloadImage } from '../app/actions/metaActions'
 
 function EditPanel({ metaData, customData, updateCustomData }) {
   const [imagePreview, setImagePreview] = useState(null)
@@ -11,6 +12,7 @@ function EditPanel({ metaData, customData, updateCustomData }) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [showDescriptionOptions, setShowDescriptionOptions] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState(null)
+  const [isImageChanged, setIsImageChanged] = useState(false)
   const fileInputRef = useRef(null)
 
   const handleImageUpload = (e) => {
@@ -21,9 +23,52 @@ function EditPanel({ metaData, customData, updateCustomData }) {
         const imageUrl = e.target.result
         setImagePreview(imageUrl)
         updateCustomData('image', imageUrl)
+        setIsImageChanged(true)
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const handleDownloadImage = async () => {
+    const imageUrl = customData.image || metaData?.image?.url
+    if (!imageUrl || isImageChanged) return
+
+    try {
+      const result = await downloadImage(imageUrl)
+      
+      if (result.success) {
+        // Convert base64 to blob
+        const base64Data = result.data.split(',')[1]
+        const binaryString = atob(base64Data)
+        const bytes = new Uint8Array(binaryString.length)
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i)
+        }
+        const blob = new Blob([bytes], { type: result.contentType })
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = 'social-card-image.png'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      } else {
+        console.error('Failed to download image:', result.error)
+      }
+    } catch (error) {
+      console.error('Error downloading image:', error)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    // Reset to original image from metadata if available
+    const originalImage = metaData?.image?.url || null
+    updateCustomData('image', originalImage)
+    setImagePreview(null)
+    setIsImageChanged(false)
   }
 
   const generateProductDescriptions = async () => {
@@ -311,14 +356,34 @@ function EditPanel({ metaData, customData, updateCustomData }) {
                       unoptimized
                     />
                   </div>
-                  <Button
-                    onClick={() => fileInputRef.current?.click()}
-                    variant="outline"
-                    className="inline-flex items-center"
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Change Image
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => fileInputRef.current?.click()}
+                      variant="outline"
+                      className="inline-flex items-center"
+                    >
+                      <Upload className="mr-2 h-4 w-4" />
+                      Change Image
+                    </Button>
+                    <Button
+                      onClick={isImageChanged ? handleRemoveImage : handleDownloadImage}
+                      variant={isImageChanged ? "destructive" : "outline"}
+                      className="inline-flex items-center"
+                      title={isImageChanged ? "Remove uploaded image" : "Download original image"}
+                    >
+                      {isImageChanged ? (
+                        <>
+                          <X className="mr-2 h-4 w-4" />
+                          Remove
+                        </>
+                      ) : (
+                        <>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
