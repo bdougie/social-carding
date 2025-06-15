@@ -10,7 +10,7 @@ import AIScorePanel from './AIScorePanel'
 import { Button } from './ui/button'
 import { fetchMetadata } from '../app/actions/metaActions'
 import { validateUrl } from '../lib/validation'
-import { Search, Edit, Eye, Code, Bot, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
+import { Edit, Eye, Code, Bot, Sparkles, AlertCircle, CheckCircle } from 'lucide-react'
 
 function SocialCardEditor() {
   const [dark, setDark] = useState(false)
@@ -387,7 +387,6 @@ function SocialCardEditor() {
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary-foreground"></div>
                       ) : (
                         <>
-                          <Search className="mr-2 h-4 w-4" />
                           Analyze
                         </>
                       )}
